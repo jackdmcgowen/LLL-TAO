@@ -199,20 +199,20 @@ namespace LLP
             /* On Generic Event, Broadcast new block if flagged. */
             case EVENTS::GENERIC:
             {
-                /* On generic events, return if no workers subscribed. */
-                uint32_t count = nSubscribed.load();
-                if(count == 0)
-                    return;
-
                 /* Check for a new round. */
                 {
                     LOCK(MUTEX);
-                    if(check_best_height())
+                    if(!check_best_height() && check_round())
                         return;
                 }
 
                 /* Alert workers of new round. */
                 respond(NEW_ROUND);
+                        
+                /* On generic events, return if no workers subscribed. */
+                uint32_t count = nSubscribed.load();
+                if(count == 0)
+                    return;
 
                 uint1024_t hashBlock;
                 std::vector<uint8_t> vData;
