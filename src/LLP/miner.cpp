@@ -202,7 +202,7 @@ namespace LLP
                 /* Check for a new round. */
                 {
                     LOCK(MUTEX);
-                    if(check_best_height())
+                    if(!check_best_height() && check_round())
                         return;
                 }
 
